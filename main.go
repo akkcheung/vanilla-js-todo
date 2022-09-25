@@ -5,6 +5,7 @@ import (
 	"time"
 	"log"
 	"strconv"
+	"os"
 
 	"net/http"
 	"encoding/json"
@@ -163,13 +164,18 @@ func handleRequests(){
 
 	router.HandleFunc("/todos/{id}", todoDeleteHandler).Methods("DELETE")
 
+	port := os.Getenv("PORT")
 
-	http.ListenAndServe(":8080", router)
+	if port == "" {
+		port = "5000"
+	}
+
+	http.ListenAndServe(":"+port, router)
 }
 
 func setupDB(){
-	//db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
-	db, err := gorm.Open(sqlite.Open("my-todo.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+	//db, err := gorm.Open(sqlite.Open("my-todo.db"), &gorm.Config{})
 
 	if err != nil {
 		panic("failed to connect database")
