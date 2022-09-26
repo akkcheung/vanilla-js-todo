@@ -7,7 +7,7 @@ General features:
 Installation (local):
 
 1. docker build . -t vanilla-js-todo 
-2. docker run --rm -p 5000:5000 vanilla-js-todo
+2. docker run --rm -p 8080:8080 vanilla-js-todo
 
 Installation (fly.io):
 - flyctl launch
