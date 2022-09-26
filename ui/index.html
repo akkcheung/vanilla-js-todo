@@ -1,157 +1,137 @@
 <html>
+  <head>
+    <style>
+      .wrapper {
+        border: 1px solid black;
+        max-width: 400px;
+        padding: 16px;
+        margin: auto;
+      }
 
-<head>
-	<style>
-		.wrapper {
-			border: 1px solid black;
-			max-width: 400px;
-			padding: 16px;
-			margin: auto;
-	}
+      header {
+        display: flex;
+        justify-content: space-between;
 
-	header {
-		display: flex;
-		justify-content: space-between;
+        border-bottom: 1px solid black;
+        padding-bottom: 16px;
+      }
 
-		border-bottom: 1px solid black;
-		padding-bottom: 16px
-	}
+      header .logo {
+        font-size: 24px;
+      }
 
-	header .logo {
-		font-size: 24px;
-	}
+      .list:empty:after {
+        content: "Your Todo list is empty. Why don't you add a new one?";
+        display: block;
+        padding: 16px;
+        color: SlateGray;
+        text-align: center;
+      }
 
-	.list:empty:after{
-		content: "Your Todo list is empty. Why don't you add a new one?";
-		display: block;
-		padding: 16px;
-		color: SlateGray;
-		text-align: center;
-	}
+      .list-item {
+        border: 1px solid LightGray;
+        padding: 8px;
+        margin-top: 16px;
+      }
 
-	.list-item {
-		border: 1px solid LightGray;
-		padding: 8px;
-		margin-top: 16px; 
-	}
+      .list-item:hover {
+        outline: 2px solid lightskyblue;
+        cursor: pointer;
+      }
 
-	.list-item:hover {
-		outline: 2px solid lightskyblue;
-		cursor: pointer;
-	}
+      dialog {
+        width: 100%;
+        max-width: 300px;
+      }
 
-	dialog {
-		width: 100%;
-		max-width: 300px;
-	}
+      dialog .title {
+        margin-top: 18px;
+        font-weight: bold;
+      }
 
-	dialog .title {
-		margin-top: 18px;
-		font-weight: bold;
-	}
+      dialog .form div {
+        margin-top: 16px;
+      }
 
-	dialog .form div {
-		margin-top: 16px;
-	}
+      dialog input {
+        width: 100%;
+        height: 32px;
+        padding: 8px;
+      }
 
-	dialog input {
-		width: 100%;
-		height: 32px;
-		padding: 8px;
-	}
+      dialog .dialog-action {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
 
-	dialog .dialog-action {
-		margin-top: 10px;
-		display: flex;
-		justify-content: space-between;
-	}	
+  <body>
+    <dialog id="create-item-dialog">
+      <div class="title">New Item</div>
 
-	</style>
+      <div class="form">
+        <div>
+          <input type="text" placeholder="description" name="description" />
+        </div>
+        <div>
+          <input type="datetime-local" placeholder="datetime" name="datetime" />
+        </div>
+        <div class="dialog-action">
+          <button class="dialog-close">Cancel</button>
+          <button id="create-item">Create</button>
+        </div>
+      </div>
+    </dialog>
 
-</head>
+    <dialog id="read-item-dialog">
+      <div class="title"></div>
+      <div class="description"></div>
+      <div class="datetime"></div>
 
-<body>
+      <input type="hidden" name="item-id" />
 
-	<dialog id="create-item-dialog">
-			<div class="title">
-				New Item
-			</div>
+      <div class="dialog-action">
+        <button class="dialog-close">Cancel</button>
+        <div class="button-group">
+          <button id="edit-item">Edit</button>
+          <button id="delete-item">Delete</button>
+        </div>
+      </div>
+    </dialog>
 
-			<div class="form">
-				<div>
-					<input type="text" placeholder="description" name="description" >
-				</div>
-				<div>
-					<input type="datetime-local" placeholder="datetime" name="datetime" >
-				</div>
-				<div class="dialog-action">
-					<button class="dialog-close">Cancel</button>
-					<button id="create-item">Create</button>
-				</div>
-			</div>
-	</dialog>
+    <dialog id="edit-item-dialog">
+      <div class="title">Edit Item</div>
 
+      <div class="form">
+        <div>
+          <input type="text" placeholder="description" name="description" />
+        </div>
+        <div>
+          <input type="datetime-local" placeholder="datetime" name="datetime" />
+        </div>
+        <div class="dialog-action">
+          <button class="dialog-close">Cancel</button>
+          <button id="update-item">Update</button>
+        </div>
+      </div>
+    </dialog>
 
-	<dialog id="read-item-dialog">
-			<div class="title">
-			</div>
-			<div class="description"></div>
-			<div class="datetime"></div>
+    <div class="wrapper">
+      <header>
+        <div class="logo">Todo List</div>
+        <button id="add-new-button">Add new</button>
+      </header>
 
-			<input type="hidden" name="item-id">
+      <div class="list">
+        <div class="list-item" data-id="0000">
+          <div class="description">sample data</div>
+          <div class="datetime">01 January 1900 00:00</div>
+        </div>
+      </div>
+    </div>
 
-			<div class="dialog-action">
-				<button class="dialog-close">Cancel</button>
-				<div class="button-group">
-					<button id="edit-item">Edit</button>
-					<button id="delete-item">Delete</button>
-				</div>
-			</div>
-	</dialog>
-
-
-	<dialog id="edit-item-dialog">
-			<div class="title">
-				Edit Item
-			</div>
-
-			<div class="form">
-				<div>
-					<input type="text" placeholder="description" name="description" >
-				</div>
-				<div>
-					<input type="datetime-local" placeholder="datetime" name="datetime" >
-				</div>
-				<div class="dialog-action">
-					<button class="dialog-close">Cancel</button>
-					<button id="update-item">Update</button>
-				</div>
-			</div>
-	</dialog>
-
-	<div class="wrapper">
-		<header>
-			<div class="logo">
-				Todo List
-			</div>
-			<button id="add-new-button">Add new</button>	
-		</header>
-
-		<div class="list">
-
-			<div class="list-item" data-id="0000">
-				<div class="description">
-					sample data	
-				</div>
-				<div class="datetime">
-					01 January 1900 00:00
-				</div>
-			</div>
-
-		</div>
-	</div>
-
-	<script type="module" src="./index.js"></script>
-</body>
-
+    <script type="module" src="./index.js"></script>
+  </body>
 </html>

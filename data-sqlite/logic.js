@@ -1,4 +1,4 @@
-import db from './db.js'
+import db from "./db.js";
 
 //var id = 1;
 
@@ -14,137 +14,128 @@ import db from './db.js'
 //			datetime: '2022-09-20T18:31',
 //			isDelete: false,
 //		},
-//	].forEach(createItem)		
+//	].forEach(createItem)
 //}
 
+async function loadData() {
+  const resp = await fetch("/todos");
+  const data = await resp.json();
 
-async function loadData(){
+  console.log("loadData()");
+  console.log(data);
+  return data;
 
-	const resp = await fetch('/todos')
-	const data = await resp.json()
-
-	console.log("loadData()")
-	console.log(data)
-	return data
-
-//	data.forEach(obj => {
-//		console.log(obj)
-//		createItem(obj)
-//	})
-
+  //	data.forEach(obj => {
+  //		console.log(obj)
+  //		createItem(obj)
+  //	})
 }
 
-function isObject(variable){
-	return typeof variable === 'object'
+function isObject(variable) {
+  return typeof variable === "object";
 }
 
 //function generateId(){
 //	return ++id
 //}
 
-async function listItems(){
-	//return JSON.parse(JSON.stringify(db)
-	//return JSON.parse(JSON.stringify(db.filter(item => item.isDelete == false)))
+async function listItems() {
+  //return JSON.parse(JSON.stringify(db)
+  //return JSON.parse(JSON.stringify(db.filter(item => item.isDelete == false)))
 
-	loadData().then(data => {
-			console.log("listItems()")
-			console.log(data)
-			return data
-	})
+  loadData().then((data) => {
+    console.log("listItems()");
+    console.log(data);
+    return data;
+  });
 }
 
-async function createItem(item){
+async function createItem(item) {
+  if (!isObject(item) || !item?.description || !item?.datetime) {
+    throw new Error("Item is invalid.");
+  }
 
-	if (!isObject(item) || !item?.description || !item?.datetime){
-		throw new Error("Item is invalid.")
-	}
+  //item.id = generateId()
+  //item.isDelete = false
 
-	//item.id = generateId()
-	//item.isDelete = false
+  //db.push(item)
 
-	//db.push(item)
-	
-	let dbItem
-	
-	const resp = await fetch('/todos/', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			description: item.description,
-			datetime: item.datetime,
-		})
-	})
+  let dbItem;
 
-	dbItem = await resp.json()
-	console.log("dbItem " + dbItem)
+  const resp = await fetch("/todos/", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      description: item.description,
+      datetime: item.datetime,
+    }),
+  });
+
+  dbItem = await resp.json();
+  console.log("dbItem " + dbItem);
 }
 
-async function readItem(id){
+async function readItem(id) {
+  //var item = db.find(item => item.id == id)
+  const resp = await fetch("/todos/" + id);
+  const data = await resp.json();
 
-	//var item = db.find(item => item.id == id)
-	const resp = await fetch('/todos/' + id)
-	const data = await resp.json()
-	 
-	console.log('readItem()')
-	console.log(data)
+  console.log("readItem()");
+  console.log(data);
 
-	return JSON.parse(JSON.stringify(data))
-
+  return JSON.parse(JSON.stringify(data));
 }
 
-async function updateItem(id, item){
+async function updateItem(id, item) {
+  if (!isObject(item) || !item?.description || !id) {
+    throw new Error("Item is invalid.");
+  }
 
-	if (!isObject(item) || !item?.description || !id){
-		throw new Error("Item is invalid.")
-	}
+  //var dbItem = db.find(item => item.id == id)
+  let dbItem;
 
-	//var dbItem = db.find(item => item.id == id)
-	let dbItem
-	
-	//dbItem.description = item.description
-	//dbItem.datetime= item.datetime
-	//
-		const resp = await fetch('/todos/' + id, {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			id: item.id,
-			description: item.description,
-			datetime: item.datetime
-		})
-	})
+  //dbItem.description = item.description
+  //dbItem.datetime= item.datetime
+  //
+  const resp = await fetch("/todos/" + id, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: item.id,
+      description: item.description,
+      datetime: item.datetime,
+    }),
+  });
 
-	dbItem = await resp.json()
-	console.log("dbItem " + dbItem)
+  dbItem = await resp.json();
+  console.log("dbItem " + dbItem);
 
-	//return item
+  //return item
 }
 
-async function deleteItem(id){
+async function deleteItem(id) {
+  //var dbItem = db.find(item => item.id == id)
+  //dbItem.isDelete = true
 
-	//var dbItem = db.find(item => item.id == id)
-	//dbItem.isDelete = true 
+  const resp = await fetch("/todos/" + id, {
+    method: "DELETE",
+  });
 
-	const resp = await fetch('/todos/' + id, {
-		method: 'DELETE',
-	})
-
-	const data = await resp.json()
-	//console.log("data:" + data)
-
+  const data = await resp.json();
+  //console.log("data:" + data)
 }
 
 export const logic = {
-	listItems,
-	createItem,
-	readItem,
-	updateItem,
-	deleteItem,
-	loadData,
-}
+  listItems,
+  createItem,
+  readItem,
+  updateItem,
+  deleteItem,
+  loadData,
+};
